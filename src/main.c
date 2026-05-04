@@ -7,6 +7,9 @@ int main(int ac, char **av)
         return(write(2, "Error\n", 6), 1);
     if (init_shared(&shared))
         return(write(2, "Error\n", 6), 1);
+    if (init_people(&shared))
+        return(write(2, "Error\n", 6), 1);
+    
 
     return (0);
 }
