@@ -52,4 +52,8 @@ struct s_shared
 	t_person		*people;
 };
 
+int parse_args(int ac, char **av, t_shared *shared);
+int init_shared(t_shared *shared);
+
+
 #endif
