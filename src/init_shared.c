@@ -44,11 +44,12 @@ int init_shared(t_shared *shared)
     shared->forks = malloc(sizeof(pthread_mutex_t) * shared->count);
     if (!shared->forks)
     {
+        pthread_mutex_destroy(&shared->print_lock);
 		pthread_mutex_destroy(&shared->state_lock);
 		return (1);
 	}
-    shared->people = malloc(sizeof(pthread_mutex_t) * shared->count);
-   if (!shared->forks)
+    shared->people = malloc(sizeof(t_person) * shared->count);
+   if (!shared->people)
 	{
 		pthread_mutex_destroy(&shared->print_lock);
 		pthread_mutex_destroy(&shared->state_lock);

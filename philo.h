@@ -30,7 +30,7 @@ typedef struct s_life
 
 typedef struct s_shared	t_shared;
 
-typedef struct s_philo_person
+typedef struct s_person
 {
 	int			person_number;
 	int			fork_one;
@@ -54,6 +54,14 @@ struct s_shared
 
 int parse_args(int ac, char **av, t_shared *shared);
 int init_shared(t_shared *shared);
+void	clean_shared(t_shared *shared);
+void	clean_people_locks(t_shared *shared, int limit);
+void	clean_fork_locks(t_shared *shared, int limit);
+long	now_ms(void);
+void	*person_routine(void *arg);
+void	set_finished(t_shared *shared);
+void	join_created_people(t_shared *shared, int limit);
+int		simulation_start(t_shared *shared);
 
 
 #endif
