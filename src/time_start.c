@@ -12,9 +12,8 @@ static void birth_time(t_shared *shared )
         pthread_mutex_unlock(&shared->people[i].life.lock);   
         i++;
     }
-    
-
 }
+
 static int wake_people(t_shared *shared)
 {
     int     i;
@@ -28,7 +27,6 @@ static int wake_people(t_shared *shared)
         i++;
     }
     return (-1);
-    
 }
 
 void    join_created_people(t_shared *shared, int limit)
@@ -43,25 +41,11 @@ void    join_created_people(t_shared *shared, int limit)
     }
     
 }
-void	*person_routine(void *arg)
-{
-	t_person	*p;
-
-	p = (t_person *)arg;
-	(void)p;
-	return (NULL);
-}
-
-void	set_finished(t_shared *shared)
-{
-	pthread_mutex_lock(&shared->state_lock);
-	shared->finished = 1;
-	pthread_mutex_unlock(&shared->state_lock);
-}
 
 int simulation_start(t_shared *shared) 
 {
     int     failed_at;
+    pthread_t   monitor_tid;
 
     shared->clock.start = now_ms();
     birth_time(shared);
@@ -72,5 +56,14 @@ int simulation_start(t_shared *shared)
         join_created_people(shared, failed_at);
         return (1);
     }
+
+    if (pthread_create(&monitor_tid, NULL, monitor_routine, shared) != 0)
+    {
+        set_finished(shared);
+        join_created_people(shared, shared->count);
+        return (1);
+    }
+    pthread_join(monitor_tid, NULL);
+    join_created_people(shared, shared->count);
     return (0);
 }

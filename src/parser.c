@@ -5,10 +5,9 @@ static int is_digitt(char *str)
     int i;
 
     i = 0;
-    if (!str || str[0])
-    {
+    if (!str || str[0] == '\0')
         return (0);
-    }
+        
     while(str[i])
     {
         if (str[i] < '0' && str[i] > '9')
@@ -39,8 +38,8 @@ static long ft_atol(char *str)
 int parse_args(int ac, char **av, t_shared *shared)
 {
 
-    if (ac != 5 || ac != 6)
-        return 1;
+    if (ac != 5 && ac != 6)
+        return (1);
 
     if (!is_digitt(av[1]) || !is_digitt(av[2]) 
         || !is_digitt(av[3]) || !is_digitt(av[4]))

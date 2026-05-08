@@ -64,4 +64,5 @@ void	join_created_people(t_shared *shared, int limit);
 int		simulation_start(t_shared *shared);
 
 
+
 #endif

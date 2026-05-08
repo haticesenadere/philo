@@ -4,7 +4,7 @@ int main(int ac, char **av)
 {
     t_shared    shared;
 
-    if(parse_args(ac, av, &shared))
+    if(parse_args(ac, av, &shared)) 
         return(write(2, "Error\n", 6), 1);
     if (init_shared(&shared))
         return(write(2, "Error\n", 6), 1);
@@ -20,7 +20,6 @@ int main(int ac, char **av)
     if (simulation_start(&shared))
 	    return (clean_shared(&shared), write(2, "Error\n", 6), 1);
 
-    join_created_people(&shared, shared.count);
     clean_shared(&shared);
     return (0);
 }

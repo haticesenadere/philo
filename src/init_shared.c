@@ -1,5 +1,18 @@
 #include "philo.h"
 
+static void	destroy_forks(t_shared *shared, int limit)
+{
+	int	i;
+
+	/* Loop: 0 to limit-1 mutex'i temizle */
+	i = 0;
+	while (i < limit)
+	{
+		pthread_mutex_destroy(&shared->forks[i]);
+		i++;
+	}
+}
+
 static int init_forks(t_shared *shared)
 {
     int i;
@@ -16,19 +29,6 @@ static int init_forks(t_shared *shared)
     }
     return (0);
 }
-
-static void destroy_forks(t_shared *shared, int limit)
-{
-    int i;
-
-    i = 0;
-    while (i < limit)
-    {
-        pthread_mutex_destroy(&shared->forks[i]);
-        i++;
-    }
-}
-
 
 int init_shared(t_shared *shared)
 {
@@ -53,6 +53,7 @@ int init_shared(t_shared *shared)
 	{
 		pthread_mutex_destroy(&shared->print_lock);
 		pthread_mutex_destroy(&shared->state_lock);
+        free(shared->forks);
 		return (1);
 	}
     if (init_forks(shared))
