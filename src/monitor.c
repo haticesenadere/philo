@@ -12,7 +12,7 @@ static int check_death(t_shared *shared)
 
         if (elapsed >= shared->clock.die)
         {
-            print_action(shared->people[i], "died");
+            print_action(&shared->people[i], "died");
             set_finished(shared);
             return (1);
         }

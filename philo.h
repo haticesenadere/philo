@@ -54,16 +54,25 @@ struct s_shared
 
 int parse_args(int ac, char **av, t_shared *shared);
 int init_shared(t_shared *shared);
+int init_people(t_shared *shared);
 void	clean_shared(t_shared *shared);
 void	clean_people_locks(t_shared *shared, int limit);
 void	clean_fork_locks(t_shared *shared, int limit);
 long	now_ms(void);
+void	precise_sleep(long ms, t_shared *shared);
+int		is_finished(t_shared *shared);
+long	get_last_eat(t_person *person);
+int		get_eat_count(t_person *person);
+void	print_action(t_person *person, const char *action);
+void	do_eat(t_person *person);
+void	do_sleep(t_person *person);
+void	do_think(t_person *person);
+void	get_forks(t_person *person);
+void	release_forks(t_person *person);
 void	*person_routine(void *arg);
+void	*monitor_routine(void *arg);
 void	set_finished(t_shared *shared);
 void	join_created_people(t_shared *shared, int limit);
 int		simulation_start(t_shared *shared);
-void    *monitor_routine(void *arg);
-
-
 
 #endif

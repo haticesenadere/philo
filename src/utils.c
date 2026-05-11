@@ -1,7 +1,15 @@
 #include "philo.h"
 
 
-void    presice_sleep(long ms, t_shared *shared)
+long    now_ms(void)
+{
+    struct timeval  tv;
+
+    gettimeofday(&tv, NULL);
+    return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+void    precise_sleep(long ms, t_shared *shared)
 {
     long    end;
 
@@ -33,13 +41,6 @@ long    get_last_eat(t_person *person)
     return (last_eat);
 }
 
-void    set_finished(t_shared *shared)
-{
-    pthread_mutex_lock(&shared->state_lock);
-    shared->finished = 1;
-    pthread_mutex_unlock(&shared->state_lock);
-}
-
 int     get_eat_count(t_person *person)
 {
     int     count;
@@ -48,4 +49,11 @@ int     get_eat_count(t_person *person)
     count = person->life.eat_count;
     pthread_mutex_unlock(&person->life.lock);
     return (count);
+}
+
+void    set_finished(t_shared *shared)
+{
+    pthread_mutex_lock(&shared->state_lock);
+    shared->finished = 1;
+    pthread_mutex_unlock(&shared->state_lock);
 }

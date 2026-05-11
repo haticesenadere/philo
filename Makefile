@@ -10,7 +10,7 @@ SRCS = src/main.c \
        src/cleanup.c \
        src/time_start.c \
        src/utils.c \
-       src/fork_ops.c \
+       src/forks_ops.c \
        src/actions.c \
        src/person_routine.c \
        src/monitor.c

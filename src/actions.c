@@ -20,22 +20,18 @@ void    print_action(t_person *person, const char *action)
 void    do_eat(t_person *person)
 {
     get_forks(person);
-    pthread_mutex_lock(&person->life.lock);
-    person->life.last_eat = now_ms();
-    pthread_mutex_unlock(&person->life.lock);
-
     print_action(person, "has taken a fork");
     print_action(person, "has taken a fork");
 
     print_action(person, "is eating");
     precise_sleep(person->shared->clock.eatt, person->shared);
 
+    pthread_mutex_lock(&person->life.lock);
+    person->life.last_eat = now_ms();
     if (!is_finished(person->shared))
-    {
-        pthread_mutex_lock(&person->life.lock);
         person->life.eat_count++;
-		pthread_mutex_unlock(&person->life.lock);
-    }
+    pthread_mutex_unlock(&person->life.lock);
+
     release_forks(person);
 }
 
@@ -49,14 +45,16 @@ void    do_think(t_person *person)
 {
     long    think_ms;
 
-    print_action(person, "is_thinking");
-    if(person->shared->count % 2 == 0)
-        return ;
-    think_ms = person->shared->clock.die;
+    print_action(person, "is thinking");
+    think_ms = person->shared->clock.die
         - person->shared->clock.eatt
         - person->shared->clock.sleep;
-    
+
     if (think_ms > 0)
-        precise_sleep(think_ms / 2, person->shared);
-    
+    {
+        if (person->shared->count % 2 == 0)
+            precise_sleep(think_ms / 4, person->shared);
+        else
+            precise_sleep(think_ms / 2, person->shared);
+    }
 }
