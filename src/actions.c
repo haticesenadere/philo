@@ -23,11 +23,14 @@ void    do_eat(t_person *person)
     print_action(person, "has taken a fork");
     print_action(person, "has taken a fork");
 
+    pthread_mutex_lock(&person->life.lock);
+    person->life.last_eat = now_ms();
+    pthread_mutex_unlock(&person->life.lock);
+
     print_action(person, "is eating");
     precise_sleep(person->shared->clock.eatt, person->shared);
 
     pthread_mutex_lock(&person->life.lock);
-    person->life.last_eat = now_ms();
     if (!is_finished(person->shared))
         person->life.eat_count++;
     pthread_mutex_unlock(&person->life.lock);

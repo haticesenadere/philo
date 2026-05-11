@@ -17,7 +17,7 @@ void    precise_sleep(long ms, t_shared *shared)
 
     while (!is_finished(shared) && now_ms() < end)
         usleep(500);
-    
+
 }
 
 int     is_finished(t_shared *shared)
