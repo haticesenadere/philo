@@ -1,6 +1,27 @@
 #include "philo.h"
 
 
+void    presice_sleep(long ms, t_shared *shared)
+{
+    long    end;
+
+    end = now_ms() + ms;
+
+    while (!is_finished(shared) && now_ms() < end)
+        usleep(500);
+    
+}
+
+int     is_finished(t_shared *shared)
+{
+    int     finished;
+
+    pthread_mutex_lock(&shared->state_lock);
+    finished = shared->finished;
+
+    pthread_mutex_unlock(&shared->state_lock);
+    return (finished);
+}
 
 long    get_last_eat(t_person *person)
 {

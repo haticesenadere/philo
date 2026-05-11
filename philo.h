@@ -62,6 +62,7 @@ void	*person_routine(void *arg);
 void	set_finished(t_shared *shared);
 void	join_created_people(t_shared *shared, int limit);
 int		simulation_start(t_shared *shared);
+void    *monitor_routine(void *arg);
 
 
 
