@@ -4,10 +4,6 @@ void    print_action(t_person *person, const char *action)
 {
     long    timestamp;
 
-    if (is_finished(person->shared))
-    {
-        return ;
-    }
     pthread_mutex_lock(&person->shared->print_lock);
     if (!is_finished(person->shared))
     {
@@ -19,7 +15,19 @@ void    print_action(t_person *person, const char *action)
 
 void    do_eat(t_person *person)
 {
+    if (is_finished(person->shared))
+        return ;
+    
+    if (person->shared->limit.active && 
+        get_eat_count(person) >= person->shared->limit.target)
+        return ;
+    
     get_forks(person);
+    if (is_finished(person->shared))
+    {
+        release_forks(person);
+        return ;
+    }
     print_action(person, "has taken a fork");
     print_action(person, "has taken a fork");
 

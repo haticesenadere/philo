@@ -12,12 +12,17 @@ long    now_ms(void)
 void    precise_sleep(long ms, t_shared *shared)
 {
     long    end;
+    long    remaining;
 
     end = now_ms() + ms;
-
     while (!is_finished(shared) && now_ms() < end)
-        usleep(500);
-
+    {
+        remaining = end - now_ms();
+        if (remaining > 1000)
+            usleep(1000);
+        else if (remaining > 0)
+            usleep(remaining * 1000 / 2);
+    }
 }
 
 int     is_finished(t_shared *shared)

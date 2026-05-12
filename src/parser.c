@@ -10,7 +10,7 @@ static int is_digitt(char *str)
 
     while(str[i])
     {
-        if (str[i] < '0' && str[i] > '9')
+        if (str[i] < '0' || str[i] > '9')
             return (0);
         i++;
     }
@@ -47,13 +47,23 @@ int parse_args(int ac, char **av, t_shared *shared)
     if (ac == 6 && ! is_digitt(av[5]))
         return (1);
     shared->count = ft_atol(av[1]);
+    if (shared->count == -1)
+        return (1);
     shared->clock.die = ft_atol(av[2]);
+    if (shared->clock.die == -1)
+        return (1);
     shared->clock.eatt = ft_atol(av[3]);
+    if (shared->clock.eatt == -1)
+        return (1);
     shared->clock.sleep = ft_atol(av[4]);
+    if (shared->clock.sleep == -1)
+        return (1);
     if (ac == 6)
     {
         shared->limit.active = 1;
         shared->limit.target = ft_atol(av[5]);
+        if (shared->limit.target == -1)
+            return (1);
     }
     else
     {
@@ -62,7 +72,7 @@ int parse_args(int ac, char **av, t_shared *shared)
     }
 
     if (shared->count <= 0 || shared->clock.die <= 0
-            || shared->count <= 0 || shared->clock.sleep <= 0)
+            || shared->clock.eatt <= 0 || shared->clock.sleep <= 0)
         return (1);
     if (shared->limit.active && shared->limit.target <= 0)
         return (1);

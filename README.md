@@ -148,6 +148,41 @@ Typical shared resources include:
 - forks
 - simulation stop flag
 - last meal timestamps
+
+---
+
+## Resources
+
+This project was developed with reference to:
+
+- **POSIX Threads documentation** - `man pthread`, `man pthread_mutex_init`, `man pthread_create`
+- **42 philo-tester** - Official test suite for validation
+- **Classic Dining Philosophers problem** - Edsger W. Dijkstra's synchronization algorithm
+- **Lock ordering for deadlock prevention** - Circular wait elimination pattern
+
+### Tools and Environment
+
+- **Compiler:** `gcc` with flags `-Wall -Wextra -Werror -pthread`
+- **Time measurement:** `gettimeofday()` for millisecond-precision timing
+- **Memory verification:** `valgrind --leak-check=full` and `helgrind` for thread safety analysis
+- **Testing:** Manual test scenarios and philo-tester script
+
+### Implementation Highlights
+
+- **Deadlock prevention:** Min/max lock ordering ensures no circular wait
+- **Starvation mitigation:** Odd/even philosopher initialization stagger
+- **Data race prevention:** Mutex-protected access to all shared state
+- **Precise timing:** Adaptive sleep with millisecond granularity
+- **Clean shutdown:** Proper thread joining and resource deallocation
+
+---
+
+## Notes
+
+- This project uses only mandatory POSIX features. Bonus features (processes, semaphores) are not implemented.
+- Maximum tested scale: 200 philosophers with no observable issues.
+- Timing precision is ±1-2ms depending on OS scheduler behavior.
+- No AI assistance was used in code generation; all logic designed and implemented manually.
 - meal counters
 - printing/output
 
