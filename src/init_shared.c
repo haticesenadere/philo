@@ -4,7 +4,6 @@ static void	destroy_forks(t_shared *shared, int limit)
 {
 	int	i;
 
-	/* Loop: 0 to limit-1 mutex'i temizle */
 	i = 0;
 	while (i < limit)
 	{

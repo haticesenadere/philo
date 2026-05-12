@@ -1,16 +1,58 @@
 #include "philo.h"
 
+static void	write_number(long num, char *buf, int *idx)
+{
+	char	temp[20];
+	int		i;
+	int		j;
+
+	if (num == 0)
+	{
+		buf[(*idx)++] = '0';
+		return ;
+	}
+	i = 0;
+	if (num < 0)
+	{
+		buf[(*idx)++] = '-';
+		num = -num;
+	}
+	while (num > 0)
+	{
+		temp[i++] = (num % 10) + '0';
+		num /= 10;
+	}
+	j = i - 1;
+	while (j >= 0)
+		buf[(*idx)++] = temp[j--];
+}
+
+static void	write_string(const char *str, char *buf, int *idx)
+{
+	while (*str)
+		buf[(*idx)++] = *str++;
+}
+
 void    print_action(t_person *person, const char *action)
 {
-    long    timestamp;
+	char	buffer[256];
+	int		idx;
+	long	timestamp;
 
-    pthread_mutex_lock(&person->shared->print_lock);
-    if (!is_finished(person->shared))
-    {
-        timestamp = now_ms() - person->shared->clock.start;
-        printf("%ld %d %s\n", timestamp, person->person_number, action);
-    }
-    pthread_mutex_unlock(&person->shared->print_lock);
+	pthread_mutex_lock(&person->shared->print_lock);
+	if (!is_finished(person->shared))
+	{
+		idx = 0;
+		timestamp = now_ms() - person->shared->clock.start;
+		write_number(timestamp, buffer, &idx);
+		buffer[idx++] = ' ';
+		write_number(person->person_number, buffer, &idx);
+		buffer[idx++] = ' ';
+		write_string(action, buffer, &idx);
+		buffer[idx++] = '\n';
+		write(1, buffer, idx);
+	}
+	pthread_mutex_unlock(&person->shared->print_lock);
 }
 
 void    do_eat(t_person *person)
