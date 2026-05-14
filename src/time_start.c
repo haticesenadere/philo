@@ -36,7 +36,8 @@ void    join_created_people(t_shared *shared, int limit)
     i = 0;
     while (i < limit)
     {
-        pthread_join(shared->people[i].tid, NULL);
+        if (shared->people[i].tid != 0)
+            pthread_join(shared->people[i].tid, NULL);
         i++;
     }
     
