@@ -1,64 +1,67 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hdere <hdere@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/14 17:57:50 by hdere             #+#    #+#             */
+/*   Updated: 2026/05/14 18:47:19 by hdere            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-
-long    now_ms(void)
+long	now_ms(void)
 {
-    struct timeval  tv;
+	struct timeval	tv;
 
-    gettimeofday(&tv, NULL);
-    return (tv.tv_sec * 1000L + tv.tv_usec / 1000);
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000L + tv.tv_usec / 1000);
 }
 
-void    precise_sleep(long ms, t_shared *shared)
+void	precise_sleep(long ms, t_shared *shared)
 {
-    long    end;
-    long    remaining;
+	long	end;
+	long	remaining;
 
-    end = now_ms() + ms;
-    while (!is_finished(shared) && now_ms() < end)
-    {
-        remaining = end - now_ms();
-        if (remaining > 1000)
-            usleep(1000);
-        else if (remaining > 0)
-            usleep(remaining * 1000 / 2);
-    }
+	end = now_ms() + ms;
+	while (!is_finished(shared) && now_ms() < end)
+	{
+		remaining = end - now_ms();
+		if (remaining > 1000)
+			usleep(1000);
+		else if (remaining > 0)
+			usleep(remaining * 1000 / 2);
+	}
 }
 
-int     is_finished(t_shared *shared)
+int	is_finished(t_shared *shared)
 {
-    int     finished;
+	int	finished;
 
-    pthread_mutex_lock(&shared->state_lock);
-    finished = shared->finished;
-
-    pthread_mutex_unlock(&shared->state_lock);
-    return (finished);
+	pthread_mutex_lock(&shared->state_lock);
+	finished = shared->finished;
+	pthread_mutex_unlock(&shared->state_lock);
+	return (finished);
 }
 
-long    get_last_eat(t_person *person)
+long	get_last_eat(t_person *person)
 {
-    long    last_eat;
+	long	last_eat;
 
-    pthread_mutex_lock(&person->life.lock);
-    last_eat = person->life.last_eat;
-    pthread_mutex_unlock(&person->life.lock);
-    return (last_eat);
+	pthread_mutex_lock(&person->life.lock);
+	last_eat = person->life.last_eat;
+	pthread_mutex_unlock(&person->life.lock);
+	return (last_eat);
 }
 
-int     get_eat_count(t_person *person)
+int	get_eat_count(t_person *person)
 {
-    int     count;
+	int	count;
 
-    pthread_mutex_lock(&person->life.lock);
-    count = person->life.eat_count;
-    pthread_mutex_unlock(&person->life.lock);
-    return (count);
-}
-
-void    set_finished(t_shared *shared)
-{
-    pthread_mutex_lock(&shared->state_lock);
-    shared->finished = 1;
-    pthread_mutex_unlock(&shared->state_lock);
+	pthread_mutex_lock(&person->life.lock);
+	count = person->life.eat_count;
+	pthread_mutex_unlock(&person->life.lock);
+	return (count);
 }

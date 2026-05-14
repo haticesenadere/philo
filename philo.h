@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hdere <hdere@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/14 17:48:17 by hdere             #+#    #+#             */
+/*   Updated: 2026/05/14 18:47:27 by hdere            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -52,9 +64,9 @@ struct s_shared
 	t_person		*people;
 };
 
-int parse_args(int ac, char **av, t_shared *shared);
-int init_shared(t_shared *shared);
-int init_people(t_shared *shared);
+int		parse_args(int ac, char **av, t_shared *shared);
+int		init_shared(t_shared *shared);
+int		init_people(t_shared *shared);
 void	clean_shared(t_shared *shared);
 void	clean_people_locks(t_shared *shared, int limit);
 void	clean_fork_locks(t_shared *shared, int limit);
@@ -72,7 +84,6 @@ void	release_forks(t_person *person);
 void	*person_routine(void *arg);
 void	*monitor_routine(void *arg);
 void	set_finished(t_shared *shared);
-void	join_created_people(t_shared *shared, int limit);
 int		simulation_start(t_shared *shared);
 
 #endif

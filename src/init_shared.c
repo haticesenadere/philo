@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_shared.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hdere <hdere@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/14 18:04:40 by hdere             #+#    #+#             */
+/*   Updated: 2026/05/14 18:46:59 by hdere            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 static void	destroy_forks(t_shared *shared, int limit)
@@ -12,56 +24,68 @@ static void	destroy_forks(t_shared *shared, int limit)
 	}
 }
 
-static int init_forks(t_shared *shared)
+static int	init_forks(t_shared *shared)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (i < shared->count)
-    {
-        if (pthread_mutex_init(&shared->forks[i], NULL) != 0)
-        {   
-            destroy_forks(shared, i);
-            return (1);
-        }
-        i++;
-    }
-    return (0);
+	i = 0;
+	while (i < shared->count)
+	{
+		if (pthread_mutex_init(&shared->forks[i], NULL) != 0)
+		{
+			destroy_forks(shared, i);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
 }
 
-int init_shared(t_shared *shared)
+static int	init_shared_locks(t_shared *shared)
 {
-    shared->finished = 0;
-    shared->clock.start = 0;
-    if (pthread_mutex_init(&shared->state_lock, NULL) != 0)
-        return (1);
-    if (pthread_mutex_init(&shared->print_lock, NULL) != 0)
-    {
+	if (pthread_mutex_init(&shared->state_lock, NULL) != 0)
+		return (1);
+	if (pthread_mutex_init(&shared->print_lock, NULL) != 0)
+	{
 		pthread_mutex_destroy(&shared->state_lock);
 		return (1);
 	}
-    shared->forks = malloc(sizeof(pthread_mutex_t) * shared->count);
-    if (!shared->forks)
-    {
-        pthread_mutex_destroy(&shared->print_lock);
-		pthread_mutex_destroy(&shared->state_lock);
+	return (0);
+}
+
+static int	alloc_shared_arrays(t_shared *shared)
+{
+	shared->forks = malloc(sizeof(pthread_mutex_t) * shared->count);
+	if (!shared->forks)
+		return (1);
+	shared->people = malloc(sizeof(t_person) * shared->count);
+	if (!shared->people)
+	{
+		free(shared->forks);
 		return (1);
 	}
-    shared->people = malloc(sizeof(t_person) * shared->count);
-   if (!shared->people)
+	return (0);
+}
+
+int	init_shared(t_shared *shared)
+{
+	shared->finished = 0;
+	shared->clock.start = 0;
+	if (init_shared_locks(shared))
+		return (1);
+	if (alloc_shared_arrays(shared))
 	{
 		pthread_mutex_destroy(&shared->print_lock);
 		pthread_mutex_destroy(&shared->state_lock);
-        free(shared->forks);
 		return (1);
 	}
-    if (init_forks(shared))
-    {
-        free(shared->people);
+	if (init_forks(shared))
+	{
+		free(shared->people);
 		free(shared->forks);
 		pthread_mutex_destroy(&shared->print_lock);
 		pthread_mutex_destroy(&shared->state_lock);
 		return (1);
 	}
-    return (0);    
+	return (0);
 }

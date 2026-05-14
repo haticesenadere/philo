@@ -1,43 +1,54 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   person_routine.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hdere <hdere@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/14 18:02:00 by hdere             #+#    #+#             */
+/*   Updated: 2026/05/14 18:47:13 by hdere            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
-static int  is_single_philosopher(t_person *person)
+
+static int	is_single_philosopher(t_person *person)
 {
-    return (person->shared->count == 1);
+	return (person->shared->count == 1);
 }
 
-static void     *handle_single_philosopher(t_person *person)
+static void	*handle_single_philosopher(t_person *person)
 {
-    pthread_mutex_lock(&person->shared->forks[person->fork_one]);
-    print_action(person, "has taken a fork");
-    precise_sleep(person->shared->clock.die, person->shared);
-    pthread_mutex_unlock(&person->shared->forks[person->fork_one]);
-    return (NULL);
-}
-static void philosopher_loop(t_person *person)
-{
-    while (!is_finished(person->shared))
-    {
-        do_eat(person);
-        if (is_finished(person->shared))
-            break ;
-        do_sleep(person);
-        if (is_finished(person->shared))
-            break ;
-        do_think(person);
-    }
+	pthread_mutex_lock(&person->shared->forks[person->fork_one]);
+	print_action(person, "has taken a fork");
+	precise_sleep(person->shared->clock.die, person->shared);
+	pthread_mutex_unlock(&person->shared->forks[person->fork_one]);
+	return (NULL);
 }
 
-void    *person_routine(void *arg)
+static void	philosopher_loop(t_person *person)
 {
-    t_person    *person;
+	while (!is_finished(person->shared))
+	{
+		do_eat(person);
+		if (is_finished(person->shared))
+			break ;
+		do_sleep(person);
+		if (is_finished(person->shared))
+			break ;
+		do_think(person);
+	}
+}
 
-    person = (t_person *)arg;
+void	*person_routine(void *arg)
+{
+	t_person	*person;
 
-    if (is_single_philosopher(person))
-        return (handle_single_philosopher(person));
-    if (person->person_number % 2 == 1)
-        usleep(5000);
-    philosopher_loop(person);
-
-    return (NULL);
-
+	person = (t_person *)arg;
+	if (is_single_philosopher(person))
+		return (handle_single_philosopher(person));
+	if (person->person_number % 2 == 1)
+		usleep(5000);
+	philosopher_loop(person);
+	return (NULL);
 }
