@@ -9,8 +9,6 @@ static void     *handle_single_philosopher(t_person *person)
     pthread_mutex_lock(&person->shared->forks[person->fork_one]);
     print_action(person, "has taken a fork");
     precise_sleep(person->shared->clock.die, person->shared);
-    print_action(person, "died");
-    set_finished(person->shared);
     pthread_mutex_unlock(&person->shared->forks[person->fork_one]);
     return (NULL);
 }
